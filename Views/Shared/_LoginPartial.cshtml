@@ -1,0 +1,91 @@
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
+
+@if (SignInManager.IsSignedIn(User))
+{
+    var user = await UserManager.GetUserAsync(User);
+    var isAdmin = User.IsInRole("Admin");
+    <div class="flex items-center space-x-4">
+        <div class="hidden sm:flex items-center space-x-2 bg-green-50 px-3 py-1 rounded-lg">
+            <i class="fas fa-wallet text-green-600"></i>
+            <span class="text-sm font-medium text-green-700">
+                @user!.Balance.ToString("N0") VND
+            </span>
+        </div>
+
+        @if (isAdmin)
+        {
+            <a asp-controller="Admin" asp-action="Index" class="hidden sm:flex items-center space-x-1 bg-blue-50 text-blue-700 px-3 py-1 rounded-lg hover:bg-blue-100 transition-colors">
+                <i class="fas fa-cogs"></i>
+                <span class="text-sm font-medium">Quản trị</span>
+            </a>
+        }
+
+        <div class="relative group">
+            <button class="flex items-center space-x-2 text-gray-700 hover:text-blue-600 transition-colors">
+                <i class="fas fa-user"></i>
+                <span class="hidden sm:block">@(user.FullName ?? user.Email)</span>
+                @if (isAdmin)
+                {
+                    <span class="bg-red-100 text-red-800 text-xs px-2 py-1 rounded-full ml-2">Admin</span>
+                }
+            </button>
+            
+            <div class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg border border-gray-200 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50">
+                <div class="py-1">
+                    <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">
+                        <i class="fas fa-cog mr-2"></i>
+                        Tài khoản
+                    </a>
+                    <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">
+                        <i class="fas fa-mobile-alt mr-2"></i>
+                        Đấu giá của tôi
+                    </a>
+                    @if (isAdmin)
+                    {
+                        <hr class="my-1" />
+                        <a asp-controller="Admin" asp-action="Index" class="block px-4 py-2 text-sm text-blue-700 hover:bg-blue-50 font-medium">
+                            <i class="fas fa-cogs mr-2"></i>
+                            Quản trị hệ thống
+                        </a>
+                        <a asp-controller="Admin" asp-action="Users" class="block px-4 py-2 text-sm text-blue-700 hover:bg-blue-50">
+                            <i class="fas fa-users mr-2"></i>
+                            Quản lý người dùng
+                        </a>
+                        <a asp-controller="Admin" asp-action="Sims" class="block px-4 py-2 text-sm text-blue-700 hover:bg-blue-50">
+                            <i class="fas fa-mobile-alt mr-2"></i>
+                            Quản lý sim số
+                        </a>
+                        <a asp-controller="Admin" asp-action="Auctions" class="block px-4 py-2 text-sm text-blue-700 hover:bg-blue-50">
+                            <i class="fas fa-gavel mr-2"></i>
+                            Quản lý đấu giá
+                        </a>
+                        <a asp-controller="Admin" asp-action="Reports" class="block px-4 py-2 text-sm text-blue-700 hover:bg-blue-50">
+                            <i class="fas fa-chart-bar mr-2"></i>
+                            Báo cáo thống kê
+                        </a>
+                    }
+                    <hr class="my-1" />
+                    <form asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })" method="post">
+                        <button type="submit" class="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50">
+                            <i class="fas fa-sign-out-alt mr-2"></i>
+                            Đăng xuất
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+else
+{
+    <div class="flex items-center space-x-3">
+        <a asp-area="Identity" asp-page="/Account/Login" class="text-gray-600 hover:text-blue-600 font-medium transition-colors">
+            Đăng nhập
+        </a>
+        <a asp-area="Identity" asp-page="/Account/Register" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors">
+            Đăng ký
+        </a>
+    </div>
+}

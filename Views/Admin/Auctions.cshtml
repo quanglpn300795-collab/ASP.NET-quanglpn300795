@@ -1,0 +1,187 @@
+@model List<SimCard>
+@{
+    ViewData["Title"] = "Quản lý đấu giá";
+}
+
+<div class="min-h-screen bg-gray-100">
+    <div class="bg-white shadow">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center py-6">
+                <div>
+                    <h1 class="text-3xl font-bold text-gray-900">Quản lý đấu giá</h1>
+                    <p class="text-gray-600">Theo dõi và quản lý các phiên đấu giá</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <!-- Navigation -->
+        <div class="mb-8">
+            <nav class="flex space-x-8">
+                <a asp-action="Index" class="text-gray-500 hover:text-gray-700 pb-2">
+                    <i class="fas fa-chart-bar mr-2"></i>Tổng quan
+                </a>
+                <a asp-action="Users" class="text-gray-500 hover:text-gray-700 pb-2">
+                    <i class="fas fa-users mr-2"></i>Người dùng
+                </a>
+                <a asp-action="Sims" class="text-gray-500 hover:text-gray-700 pb-2">
+                    <i class="fas fa-mobile-alt mr-2"></i>Sim số
+                </a>
+                <a asp-action="Auctions" class="text-blue-600 border-b-2 border-blue-600 pb-2 font-medium">
+                    <i class="fas fa-gavel mr-2"></i>Đấu giá
+                </a>
+                <a asp-action="Reports" class="text-gray-500 hover:text-gray-700 pb-2">
+                    <i class="fas fa-file-alt mr-2"></i>Báo cáo
+                </a>
+            </nav>
+        </div>
+
+        <!-- Auctions Table -->
+        <div class="bg-white shadow rounded-lg overflow-hidden">
+            <div class="px-6 py-4 border-b border-gray-200">
+                <h3 class="text-lg font-medium text-gray-900">Danh sách đấu giá (@Model.Count)</h3>
+            </div>
+            <div class="overflow-x-auto">
+                <table class="min-w-full divide-y divide-gray-200">
+                    <thead class="bg-gray-50">
+                        <tr>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Sim số
+                            </th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Giá hiện tại
+                            </th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Lượt đấu
+                            </th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Trạng thái
+                            </th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Thời gian
+                            </th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Thao tác
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-white divide-y divide-gray-200">
+                        @foreach (var auction in Model)
+                        {
+                            <tr class="hover:bg-gray-50">
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="flex items-center">
+                                        <div class="flex-shrink-0">
+                                            <i class="fas fa-mobile-alt text-blue-600"></i>
+                                        </div>
+                                        <div class="ml-3">
+                                            <div class="text-sm font-medium text-gray-900">@auction.Number</div>
+                                            <div class="text-sm text-gray-500">@auction.Network - @auction.Category</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="text-sm font-medium text-gray-900">@auction.CurrentPrice.ToString("N0") VND</div>
+                                    <div class="text-sm text-gray-500">Khởi điểm: @auction.StartingPrice.ToString("N0") VND</div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="text-sm text-gray-900">@auction.TotalBids lượt</div>
+                                    @if (auction.Bids.Any())
+                                    {
+                                        <div class="text-sm text-gray-500">
+                                            Cao nhất: @auction.Bids.OrderByDescending(b => b.Amount).First().User.FullName
+                                        </div>
+                                    }
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full 
+                                        @(auction.Status == SimStatus.Active ? "bg-green-100 text-green-800" : 
+                                          auction.Status == SimStatus.Sold ? "bg-blue-100 text-blue-800" : 
+                                          "bg-gray-100 text-gray-800")">
+                                        @(auction.Status == SimStatus.Active ? "Đang đấu" : 
+                                          auction.Status == SimStatus.Sold ? "Đã bán" : 
+                                          auction.Status == SimStatus.Ended ? "Kết thúc" : "Nháp")
+                                    </span>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                    <div>Bắt đầu: @auction.StartTime.ToString("dd/MM HH:mm")</div>
+                                    <div>Kết thúc: @auction.EndTime.ToString("dd/MM HH:mm")</div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                    <div class="flex space-x-2">
+                                        <a asp-action="AuctionDetails" asp-route-id="@auction.Id" 
+                                           class="text-blue-600 hover:text-blue-900">
+                                            <i class="fas fa-eye mr-1"></i>Chi tiết
+                                        </a>
+                                        @if (auction.Status == SimStatus.Active)
+                                        {
+                                            <button onclick="endAuction('@auction.Id', '@auction.Number')" 
+                                                    class="text-red-600 hover:text-red-900">
+                                                <i class="fas fa-stop mr-1"></i>Kết thúc
+                                            </button>
+                                        }
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        @if (!Model.Any())
+        {
+            <div class="text-center py-12">
+                <i class="fas fa-gavel text-6xl text-gray-300 mb-4"></i>
+                <h3 class="text-lg font-medium text-gray-900 mb-2">Chưa có phiên đấu giá nào</h3>
+                <p class="text-gray-600 mb-4">Tạo sim mới để bắt đầu đấu giá</p>
+                <a asp-action="CreateSim" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700">
+                    <i class="fas fa-plus mr-2"></i>Thêm sim mới
+                </a>
+            </div>
+        }
+    </div>
+</div>
+
+<!-- End Auction Modal -->
+<div id="endAuctionModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden z-50">
+    <div class="flex items-center justify-center min-h-screen p-4">
+        <div class="bg-white rounded-lg shadow-xl max-w-md w-full">
+            <div class="p-6">
+                <h3 class="text-lg font-medium text-gray-900 mb-4">Kết thúc đấu giá</h3>
+                <p class="text-sm text-gray-600 mb-4">
+                    Bạn có chắc chắn muốn kết thúc đấu giá sim <span id="endAuctionNumber" class="font-medium"></span>? 
+                    Người đấu giá cao nhất sẽ thắng.
+                </p>
+                <div class="flex justify-end space-x-3">
+                    <button type="button" onclick="hideEndAuctionModal()" 
+                            class="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-md hover:bg-gray-200">
+                        Hủy
+                    </button>
+                    <form id="endAuctionForm" method="post" asp-action="EndAuction" class="inline">
+                        <input type="hidden" id="endAuctionId" name="id" />
+                        <button type="submit" 
+                                class="px-4 py-2 text-sm font-medium text-white bg-red-600 rounded-md hover:bg-red-700">
+                            Kết thúc
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function endAuction(auctionId, simNumber) {
+            document.getElementById('endAuctionId').value = auctionId;
+            document.getElementById('endAuctionNumber').textContent = simNumber;
+            document.getElementById('endAuctionModal').classList.remove('hidden');
+        }
+
+        function hideEndAuctionModal() {
+            document.getElementById('endAuctionModal').classList.add('hidden');
+        }
+    </script>
+}

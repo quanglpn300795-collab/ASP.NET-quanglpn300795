@@ -1,0 +1,45 @@
+import { z, GenerateRequest, GenerateResponseData, MediaPart, Operation } from 'genkit';
+import { SafetySetting, ImagenPredictRequest, ImagenPredictResponse } from '../common/types.mjs';
+import { SafetySettingsSchema } from './gemini.mjs';
+import { ImagenConfigSchemaType } from './imagen.mjs';
+import { LyriaConfigSchemaType } from './lyria.mjs';
+import { LyriaPredictRequest, LyriaPredictResponse, VeoPredictRequest, VeoMedia, VeoOperation, VeoOperationRequest } from './types.mjs';
+import { VeoConfigSchemaType } from './veo.mjs';
+import 'genkit/model';
+import 'google-auth-library';
+
+/**
+ * Copyright 2025 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+declare function toGeminiSafetySettings(genkitSettings?: z.infer<typeof SafetySettingsSchema>[]): SafetySetting[] | undefined;
+declare function toGeminiLabels(labels?: Record<string, string>): Record<string, string> | undefined;
+declare function toImagenPredictRequest(request: GenerateRequest<ImagenConfigSchemaType>): ImagenPredictRequest;
+/**
+ *
+ * @param response The response to convert
+ * @param request The request (for usage stats)
+ * @returns The converted response
+ */
+declare function fromImagenResponse(response: ImagenPredictResponse, request: GenerateRequest): GenerateResponseData;
+declare function toLyriaPredictRequest(request: GenerateRequest<LyriaConfigSchemaType>): LyriaPredictRequest;
+declare function fromLyriaResponse(response: LyriaPredictResponse, request: GenerateRequest): GenerateResponseData;
+declare function toVeoPredictRequest(request: GenerateRequest<VeoConfigSchemaType>): VeoPredictRequest;
+declare function toVeoMedia(media: MediaPart['media']): VeoMedia;
+declare function fromVeoOperation(fromOp: VeoOperation): Operation<GenerateResponseData>;
+declare function toVeoModel(op: Operation<GenerateResponseData>): string;
+declare function toVeoOperationRequest(op: Operation<GenerateResponseData>): VeoOperationRequest;
+
+export { fromImagenResponse, fromLyriaResponse, fromVeoOperation, toGeminiLabels, toGeminiSafetySettings, toImagenPredictRequest, toLyriaPredictRequest, toVeoMedia, toVeoModel, toVeoOperationRequest, toVeoPredictRequest };

@@ -1,0 +1,119 @@
+@page
+@model RegisterModel
+@{
+    ViewData["Title"] = "Đăng ký";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-md w-full space-y-8">
+        <div>
+            <div class="mx-auto h-12 w-12 flex items-center justify-center rounded-full bg-blue-100">
+                <i class="fas fa-user-plus text-2xl text-blue-600"></i>
+            </div>
+            <h2 class="mt-6 text-center text-3xl font-extrabold text-gray-900">
+                Tạo tài khoản mới
+            </h2>
+            <p class="mt-2 text-center text-sm text-gray-600">
+                Hoặc
+                <a asp-page="./Login" asp-route-returnUrl="@Model.ReturnUrl" class="font-medium text-blue-600 hover:text-blue-500">
+                    đăng nhập vào tài khoản có sẵn
+                </a>
+            </p>
+        </div>
+        
+        <form class="mt-8 space-y-6" asp-route-returnUrl="@Model.ReturnUrl" method="post">
+            <div asp-validation-summary="ModelOnly" class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded relative" role="alert"></div>
+            
+            <div class="space-y-4">
+                <div>
+                    <label asp-for="Input.FullName" class="block text-sm font-medium text-gray-700">Họ và tên</label>
+                    <input asp-for="Input.FullName" autocomplete="name" required 
+                           class="mt-1 appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm" 
+                           placeholder="Nhập họ và tên của bạn" />
+                    <span asp-validation-for="Input.FullName" class="text-red-600 text-sm"></span>
+                </div>
+
+                <div>
+                    <label asp-for="Input.Email" class="block text-sm font-medium text-gray-700">Email</label>
+                    <input asp-for="Input.Email" autocomplete="email" required 
+                           class="mt-1 appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm" 
+                           placeholder="Nhập địa chỉ email" />
+                    <span asp-validation-for="Input.Email" class="text-red-600 text-sm"></span>
+                </div>
+
+                <div>
+                    <label asp-for="Input.PhoneNumber" class="block text-sm font-medium text-gray-700">Số điện thoại</label>
+                    <input asp-for="Input.PhoneNumber" autocomplete="tel" 
+                           class="mt-1 appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm" 
+                           placeholder="Nhập số điện thoại (tùy chọn)" />
+                    <span asp-validation-for="Input.PhoneNumber" class="text-red-600 text-sm"></span>
+                </div>
+
+                <div>
+                    <label asp-for="Input.Password" class="block text-sm font-medium text-gray-700">Mật khẩu</label>
+                    <input asp-for="Input.Password" autocomplete="new-password" required 
+                           class="mt-1 appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm" 
+                           placeholder="Nhập mật khẩu" />
+                    <span asp-validation-for="Input.Password" class="text-red-600 text-sm"></span>
+                    <p class="mt-1 text-xs text-gray-500">Mật khẩu tối thiểu 6 ký tự</p>
+                </div>
+
+                <div>
+                    <label asp-for="Input.ConfirmPassword" class="block text-sm font-medium text-gray-700">Xác nhận mật khẩu</label>
+                    <input asp-for="Input.ConfirmPassword" autocomplete="new-password" required 
+                           class="mt-1 appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm" 
+                           placeholder="Nhập lại mật khẩu" />
+                    <span asp-validation-for="Input.ConfirmPassword" class="text-red-600 text-sm"></span>
+                </div>
+            </div>
+
+            <div class="flex items-center">
+                <input id="agree-terms" name="agree-terms" type="checkbox" required
+                       class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded" />
+                <label for="agree-terms" class="ml-2 block text-sm text-gray-900">
+                    Tôi đồng ý với 
+                    <a href="#" class="text-blue-600 hover:text-blue-500">Điều khoản sử dụng</a> 
+                    và 
+                    <a href="#" class="text-blue-600 hover:text-blue-500">Chính sách bảo mật</a>
+                </label>
+            </div>
+
+            <div>
+                <button type="submit" class="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                    <span class="absolute left-0 inset-y-0 flex items-center pl-3">
+                        <i class="fas fa-user-plus text-blue-500 group-hover:text-blue-400"></i>
+                    </span>
+                    Tạo tài khoản
+                </button>
+            </div>
+        </form>
+
+        <!-- Benefits -->
+        <div class="mt-8 bg-green-50 border border-green-200 rounded-lg p-4">
+            <h3 class="text-sm font-medium text-green-800 mb-2">Lợi ích khi đăng ký:</h3>
+            <ul class="text-xs text-green-700 space-y-1">
+                <li class="flex items-center">
+                    <i class="fas fa-check text-green-600 mr-2"></i>
+                    Tham gia đấu giá sim số đẹp
+                </li>
+                <li class="flex items-center">
+                    <i class="fas fa-check text-green-600 mr-2"></i>
+                    Theo dõi lịch sử đấu giá
+                </li>
+                <li class="flex items-center">
+                    <i class="fas fa-check text-green-600 mr-2"></i>
+                    Nhận thông báo sim yêu thích
+                </li>
+                <li class="flex items-center">
+                    <i class="fas fa-check text-green-600 mr-2"></i>
+                    Tặng 100,000 VND khi đăng ký
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

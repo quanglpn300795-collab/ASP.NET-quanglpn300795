@@ -1,0 +1,103 @@
+@page
+@model LoginModel
+
+@{
+    ViewData["Title"] = "Đăng nhập";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-md w-full space-y-8">
+        <div>
+            <div class="mx-auto h-12 w-12 flex items-center justify-center rounded-full bg-blue-100">
+                <i class="fas fa-mobile-alt text-2xl text-blue-600"></i>
+            </div>
+            <h2 class="mt-6 text-center text-3xl font-extrabold text-gray-900">
+                Đăng nhập vào tài khoản
+            </h2>
+            <p class="mt-2 text-center text-sm text-gray-600">
+                Hoặc
+                <a asp-page="./Register" asp-route-returnUrl="@Model.ReturnUrl" class="font-medium text-blue-600 hover:text-blue-500">
+                    tạo tài khoản mới
+                </a>
+            </p>
+        </div>
+        
+        <form class="mt-8 space-y-6" id="account" method="post">
+            <input type="hidden" asp-for="ReturnUrl" />
+            <div asp-validation-summary="ModelOnly" class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded relative" role="alert"></div>
+            
+            <div class="rounded-md shadow-sm -space-y-px">
+                <div>
+                    <label asp-for="Input.Email" class="sr-only">Email</label>
+                    <input asp-for="Input.Email" autocomplete="email" required 
+                           class="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm" 
+                           placeholder="Địa chỉ email" />
+                    <span asp-validation-for="Input.Email" class="text-red-600 text-sm"></span>
+                </div>
+                <div>
+                    <label asp-for="Input.Password" class="sr-only">Mật khẩu</label>
+                    <input asp-for="Input.Password" autocomplete="current-password" required 
+                           class="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm" 
+                           placeholder="Mật khẩu" />
+                    <span asp-validation-for="Input.Password" class="text-red-600 text-sm"></span>
+                </div>
+            </div>
+
+            <div class="flex items-center justify-between">
+                <div class="flex items-center">
+                    <input asp-for="Input.RememberMe" type="checkbox" 
+                           class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded" />
+                    <label asp-for="Input.RememberMe" class="ml-2 block text-sm text-gray-900">
+                        Ghi nhớ đăng nhập
+                    </label>
+                </div>
+
+                <div class="text-sm">
+                    <a asp-page="./ForgotPassword" class="font-medium text-blue-600 hover:text-blue-500">
+                        Quên mật khẩu?
+                    </a>
+                </div>
+            </div>
+
+            <div>
+                <button type="submit" class="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                    <span class="absolute left-0 inset-y-0 flex items-center pl-3">
+                        <i class="fas fa-sign-in-alt text-blue-500 group-hover:text-blue-400"></i>
+                    </span>
+                    Đăng nhập
+                </button>
+            </div>
+        </form>
+
+        <!-- Demo Accounts -->
+        <div class="mt-8 bg-blue-50 border border-blue-200 rounded-lg p-4">
+            <h3 class="text-sm font-medium text-blue-800 mb-3">Tài khoản demo:</h3>
+            <div class="space-y-2 text-xs text-blue-700">
+                <div class="flex justify-between items-center">
+                    <span><strong>Admin:</strong> admin@simauction.com</span>
+                    <button onclick="fillLogin('admin@simauction.com', '123456')" 
+                            class="text-blue-600 hover:text-blue-800 underline">Sử dụng</button>
+                </div>
+                <div class="flex justify-between items-center">
+                    <span><strong>User:</strong> user1@test.com</span>
+                    <button onclick="fillLogin('user1@test.com', '123456')" 
+                            class="text-blue-600 hover:text-blue-800 underline">Sử dụng</button>
+                </div>
+                <div class="text-center mt-2">
+                    <span class="text-blue-600">Mật khẩu: <strong>123456</strong></span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        function fillLogin(email, password) {
+            document.getElementById('Input_Email').value = email;
+            document.getElementById('Input_Password').value = password;
+        }
+    </script>
+}

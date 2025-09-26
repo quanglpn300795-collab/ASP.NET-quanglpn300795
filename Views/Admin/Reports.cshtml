@@ -1,0 +1,193 @@
+@{
+    ViewData["Title"] = "Báo cáo thống kê";
+}
+
+<div class="min-h-screen bg-gray-100">
+    <div class="bg-white shadow">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center py-6">
+                <div>
+                    <h1 class="text-3xl font-bold text-gray-900">Báo cáo thống kê</h1>
+                    <p class="text-gray-600">Phân tích dữ liệu và hiệu suất hệ thống</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <!-- Navigation -->
+        <div class="mb-8">
+            <nav class="flex space-x-8">
+                <a asp-action="Index" class="text-gray-500 hover:text-gray-700 pb-2">
+                    <i class="fas fa-chart-bar mr-2"></i>Tổng quan
+                </a>
+                <a asp-action="Users" class="text-gray-500 hover:text-gray-700 pb-2">
+                    <i class="fas fa-users mr-2"></i>Người dùng
+                </a>
+                <a asp-action="Sims" class="text-gray-500 hover:text-gray-700 pb-2">
+                    <i class="fas fa-mobile-alt mr-2"></i>Sim số
+                </a>
+                <a asp-action="Auctions" class="text-gray-500 hover:text-gray-700 pb-2">
+                    <i class="fas fa-gavel mr-2"></i>Đấu giá
+                </a>
+                <a asp-action="Reports" class="text-blue-600 border-b-2 border-blue-600 pb-2 font-medium">
+                    <i class="fas fa-file-alt mr-2"></i>Báo cáo
+                </a>
+            </nav>
+        </div>
+
+        <!-- Today vs This Month -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+            <!-- Today Stats -->
+            <div class="bg-white rounded-lg shadow">
+                <div class="p-6">
+                    <h3 class="text-lg font-medium text-gray-900 mb-4">
+                        <i class="fas fa-calendar-day text-blue-600 mr-2"></i>Hôm nay
+                    </h3>
+                    <div class="space-y-4">
+                        <div class="flex justify-between items-center">
+                            <span class="text-gray-600">Người dùng mới:</span>
+                            <span class="text-2xl font-bold text-blue-600">@ViewBag.Report.TodayUsers</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-gray-600">Lượt đấu giá:</span>
+                            <span class="text-2xl font-bold text-green-600">@ViewBag.Report.TodayBids</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-gray-600">Doanh thu:</span>
+                            <span class="text-2xl font-bold text-purple-600">@ViewBag.Report.TodayRevenue.ToString("N0") VND</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- This Month Stats -->
+            <div class="bg-white rounded-lg shadow">
+                <div class="p-6">
+                    <h3 class="text-lg font-medium text-gray-900 mb-4">
+                        <i class="fas fa-calendar-alt text-green-600 mr-2"></i>Tháng này
+                    </h3>
+                    <div class="space-y-4">
+                        <div class="flex justify-between items-center">
+                            <span class="text-gray-600">Người dùng mới:</span>
+                            <span class="text-2xl font-bold text-blue-600">@ViewBag.Report.MonthUsers</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-gray-600">Lượt đấu giá:</span>
+                            <span class="text-2xl font-bold text-green-600">@ViewBag.Report.MonthBids</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-gray-600">Doanh thu:</span>
+                            <span class="text-2xl font-bold text-purple-600">@ViewBag.Report.MonthRevenue.ToString("N0") VND</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Top Lists -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <!-- Top Sims -->
+            <div class="bg-white rounded-lg shadow">
+                <div class="p-6">
+                    <h3 class="text-lg font-medium text-gray-900 mb-4">
+                        <i class="fas fa-trophy text-yellow-600 mr-2"></i>Top 5 sim giá cao nhất
+                    </h3>
+                    <div class="space-y-3">
+                        @foreach (var sim in ViewBag.Report.TopSims)
+                        {
+                            <div class="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
+                                <div>
+                                    <div class="font-medium text-gray-900">@sim.Number</div>
+                                    <div class="text-sm text-gray-500">@sim.TotalBids lượt đấu</div>
+                                </div>
+                                <div class="text-right">
+                                    <div class="font-bold text-green-600">@sim.CurrentPrice.ToString("N0") VND</div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+
+            <!-- Top Users -->
+            <div class="bg-white rounded-lg shadow">
+                <div class="p-6">
+                    <h3 class="text-lg font-medium text-gray-900 mb-4">
+                        <i class="fas fa-users text-blue-600 mr-2"></i>Top 5 người dùng số dư cao
+                    </h3>
+                    <div class="space-y-3">
+                        @foreach (var user in ViewBag.Report.TopUsers)
+                        {
+                            <div class="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
+                                <div>
+                                    <div class="font-medium text-gray-900">@user.FullName</div>
+                                    <div class="text-sm text-gray-500">@user.Email</div>
+                                </div>
+                                <div class="text-right">
+                                    <div class="font-bold text-blue-600">@user.Balance.ToString("N0") VND</div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Performance Metrics -->
+        <div class="mt-8 bg-white rounded-lg shadow">
+            <div class="p-6">
+                <h3 class="text-lg font-medium text-gray-900 mb-6">
+                    <i class="fas fa-chart-line text-purple-600 mr-2"></i>Chỉ số hiệu suất
+                </h3>
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+                    <div class="text-center">
+                        <div class="text-3xl font-bold text-blue-600 mb-2">
+                            @(ViewBag.Report.MonthBids > 0 ? (ViewBag.Report.MonthRevenue / ViewBag.Report.MonthBids).ToString("N0") : "0")
+                        </div>
+                        <div class="text-sm text-gray-600">Doanh thu trung bình/lượt đấu</div>
+                    </div>
+                    <div class="text-center">
+                        <div class="text-3xl font-bold text-green-600 mb-2">
+                            @(ViewBag.Report.MonthUsers > 0 ? Math.Round((decimal)ViewBag.Report.MonthBids / ViewBag.Report.MonthUsers, 1) : 0)
+                        </div>
+                        <div class="text-sm text-gray-600">Lượt đấu/người dùng mới</div>
+                    </div>
+                    <div class="text-center">
+                        <div class="text-3xl font-bold text-yellow-600 mb-2">
+                            @(ViewBag.Report.TodayUsers > 0 ? Math.Round((decimal)ViewBag.Report.TodayRevenue / ViewBag.Report.TodayUsers, 0) : 0)
+                        </div>
+                        <div class="text-sm text-gray-600">Doanh thu/người dùng mới hôm nay</div>
+                    </div>
+                    <div class="text-center">
+                        <div class="text-3xl font-bold text-purple-600 mb-2">
+                            @Math.Round(ViewBag.Report.MonthRevenue > 0 ? (decimal)ViewBag.Report.TodayRevenue / ViewBag.Report.MonthRevenue * 100 : 0, 1)%
+                        </div>
+                        <div class="text-sm text-gray-600">% doanh thu hôm nay/tháng</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Export Options -->
+        <div class="mt-8 bg-white rounded-lg shadow">
+            <div class="p-6">
+                <h3 class="text-lg font-medium text-gray-900 mb-4">
+                    <i class="fas fa-download text-indigo-600 mr-2"></i>Xuất báo cáo
+                </h3>
+                <div class="flex flex-wrap gap-3">
+                    <button class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700">
+                        <i class="fas fa-file-excel mr-2"></i>Xuất Excel
+                    </button>
+                    <button class="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700">
+                        <i class="fas fa-file-pdf mr-2"></i>Xuất PDF
+                    </button>
+                    <button class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700">
+                        <i class="fas fa-file-csv mr-2"></i>Xuất CSV
+                    </button>
+                </div>
+                <p class="text-sm text-gray-500 mt-2">Tính năng xuất báo cáo sẽ được phát triển trong phiên bản tiếp theo</p>
+            </div>
+        </div>
+    </div>
+</div>

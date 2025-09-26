@@ -1,0 +1,166 @@
+@model List<ApplicationUser>
+@{
+    ViewData["Title"] = "Quản lý người dùng";
+}
+
+<div class="min-h-screen bg-gray-100">
+    <div class="bg-white shadow">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center py-6">
+                <div>
+                    <h1 class="text-3xl font-bold text-gray-900">Quản lý người dùng</h1>
+                    <p class="text-gray-600">Danh sách và thông tin người dùng</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <!-- Navigation -->
+        <div class="mb-8">
+            <nav class="flex space-x-8">
+                <a asp-action="Index" class="text-gray-500 hover:text-gray-700 pb-2">
+                    <i class="fas fa-chart-bar mr-2"></i>Tổng quan
+                </a>
+                <a asp-action="Users" class="text-blue-600 border-b-2 border-blue-600 pb-2 font-medium">
+                    <i class="fas fa-users mr-2"></i>Người dùng
+                </a>
+                <a asp-action="Sims" class="text-gray-500 hover:text-gray-700 pb-2">
+                    <i class="fas fa-mobile-alt mr-2"></i>Sim số
+                </a>
+                <a asp-action="Auctions" class="text-gray-500 hover:text-gray-700 pb-2">
+                    <i class="fas fa-gavel mr-2"></i>Đấu giá
+                </a>
+                <a asp-action="Reports" class="text-gray-500 hover:text-gray-700 pb-2">
+                    <i class="fas fa-file-alt mr-2"></i>Báo cáo
+                </a>
+            </nav>
+        </div>
+
+        <!-- Users Table -->
+        <div class="bg-white shadow rounded-lg">
+            <div class="px-6 py-4 border-b border-gray-200">
+                <h3 class="text-lg font-medium text-gray-900">Danh sách người dùng (@Model.Count)</h3>
+            </div>
+            <div class="overflow-x-auto">
+                <table class="min-w-full divide-y divide-gray-200">
+                    <thead class="bg-gray-50">
+                        <tr>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Người dùng
+                            </th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Email
+                            </th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Số dư
+                            </th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Ngày tham gia
+                            </th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Thao tác
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-white divide-y divide-gray-200">
+                        @foreach (var user in Model)
+                        {
+                            <tr class="hover:bg-gray-50">
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="flex items-center">
+                                        <div class="flex-shrink-0 h-10 w-10">
+                                            <div class="h-10 w-10 rounded-full bg-blue-100 flex items-center justify-center">
+                                                <i class="fas fa-user text-blue-600"></i>
+                                            </div>
+                                        </div>
+                                        <div class="ml-4">
+                                            <div class="text-sm font-medium text-gray-900">
+                                                @(user.FullName ?? "Chưa cập nhật")
+                                            </div>
+                                            <div class="text-sm text-gray-500">ID: @user.Id.Substring(0, 8)...</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="text-sm text-gray-900">@user.Email</div>
+                                    <div class="text-sm text-gray-500">@(user.PhoneNumber ?? "Chưa có SĐT")</div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="text-sm font-medium text-gray-900">
+                                        @user.Balance.ToString("N0") VND
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                    @user.CreatedAt.ToString("dd/MM/yyyy")
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                    <div class="flex space-x-2">
+                                        <button onclick="showBalanceModal('@user.Id', '@user.FullName', @user.Balance)" 
+                                                class="text-blue-600 hover:text-blue-900">
+                                            <i class="fas fa-wallet mr-1"></i>Nạp tiền
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Balance Modal -->
+<div id="balanceModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden z-50">
+    <div class="flex items-center justify-center min-h-screen p-4">
+        <div class="bg-white rounded-lg shadow-xl max-w-md w-full">
+            <div class="p-6">
+                <h3 class="text-lg font-medium text-gray-900 mb-4">Cập nhật số dư</h3>
+                <form id="balanceForm" method="post" asp-action="UpdateUserBalance">
+                    <input type="hidden" id="userId" name="userId" />
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Người dùng</label>
+                        <p id="userName" class="text-sm text-gray-600"></p>
+                    </div>
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Số dư hiện tại</label>
+                        <p id="currentBalance" class="text-sm text-gray-600"></p>
+                    </div>
+                    <div class="mb-4">
+                        <label for="amount" class="block text-sm font-medium text-gray-700 mb-2">Số tiền thay đổi</label>
+                        <input type="number" id="amount" name="amount" step="1000" 
+                               class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                               placeholder="Nhập số tiền (âm để trừ, dương để cộng)" required />
+                    </div>
+                    <div class="flex justify-end space-x-3">
+                        <button type="button" onclick="hideBalanceModal()" 
+                                class="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-md hover:bg-gray-200">
+                            Hủy
+                        </button>
+                        <button type="submit" 
+                                class="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700">
+                            Cập nhật
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function showBalanceModal(userId, userName, currentBalance) {
+            document.getElementById('userId').value = userId;
+            document.getElementById('userName').textContent = userName;
+            document.getElementById('currentBalance').textContent = currentBalance.toLocaleString('vi-VN') + ' VND';
+            document.getElementById('balanceModal').classList.remove('hidden');
+        }
+
+        function hideBalanceModal() {
+            document.getElementById('balanceModal').classList.add('hidden');
+            document.getElementById('amount').value = '';
+        }
+    </script>
+}

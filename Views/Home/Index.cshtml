@@ -1,0 +1,229 @@
+@model List<SimCard>
+@{
+    ViewData["Title"] = "Trang chủ";
+}
+
+<!-- Hero Section -->
+<div class="bg-gradient-to-r from-blue-600 to-purple-700 text-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+        <div class="text-center">
+            <h1 class="text-4xl md:text-6xl font-bold mb-6">
+                Đấu Giá Sim Số Đẹp
+            </h1>
+            <p class="text-xl md:text-2xl text-blue-100 mb-8">
+                Nền tảng đấu giá sim số đẹp uy tín và minh bạch nhất Việt Nam
+            </p>
+            <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                <button class="bg-white text-blue-600 px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors">
+                    Khám phá ngay
+                </button>
+                <button class="border-2 border-white text-white px-8 py-3 rounded-lg font-semibold hover:bg-white hover:text-blue-600 transition-colors">
+                    Hướng dẫn đấu giá
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Stats Section -->
+<div class="bg-white shadow-sm">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div class="grid grid-cols-2 md:grid-cols-3 gap-6">
+            <div class="text-center">
+                <div class="flex items-center justify-center w-12 h-12 bg-blue-100 rounded-lg mx-auto mb-3">
+                    <i class="fas fa-mobile-alt text-blue-600"></i>
+                </div>
+                <div class="text-2xl font-bold text-gray-900">@ViewBag.TotalAuctions</div>
+                <div class="text-sm text-gray-600">Tổng phiên đấu giá</div>
+            </div>
+            <div class="text-center">
+                <div class="flex items-center justify-center w-12 h-12 bg-green-100 rounded-lg mx-auto mb-3">
+                    <i class="fas fa-clock text-green-600"></i>
+                </div>
+                <div class="text-2xl font-bold text-gray-900">@ViewBag.ActiveAuctions</div>
+                <div class="text-sm text-gray-600">Đang diễn ra</div>
+            </div>
+            <div class="text-center">
+                <div class="flex items-center justify-center w-12 h-12 bg-purple-100 rounded-lg mx-auto mb-3">
+                    <i class="fas fa-users text-purple-600"></i>
+                </div>
+                <div class="text-2xl font-bold text-gray-900">@ViewBag.TotalUsers</div>
+                <div class="text-sm text-gray-600">Thành viên</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Filters -->
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-8">
+        <form method="get" class="flex flex-col md:flex-row gap-4">
+            <div class="flex-1">
+                <label class="block text-sm font-medium text-gray-700 mb-2">Nhà mạng</label>
+                <select name="network" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
+                    <option value="">Tất cả nhà mạng</option>
+                    <option value="Viettel" selected="@(ViewBag.Network == "Viettel")">Viettel</option>
+                    <option value="Vinaphone" selected="@(ViewBag.Network == "Vinaphone")">Vinaphone</option>
+                    <option value="Mobifone" selected="@(ViewBag.Network == "Mobifone")">Mobifone</option>
+                    <option value="Vietnamobile" selected="@(ViewBag.Network == "Vietnamobile")">Vietnamobile</option>
+                </select>
+            </div>
+            <div class="flex-1">
+                <label class="block text-sm font-medium text-gray-700 mb-2">Danh mục</label>
+                <select name="category" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
+                    <option value="">Tất cả danh mục</option>
+                    <option value="Sim lộc phát" selected="@(ViewBag.Category == "Sim lộc phát")">Sim lộc phát</option>
+                    <option value="Sim thần tài" selected="@(ViewBag.Category == "Sim thần tài")">Sim thần tài</option>
+                    <option value="Sim năm sinh" selected="@(ViewBag.Category == "Sim năm sinh")">Sim năm sinh</option>
+                    <option value="Sim tam hoa" selected="@(ViewBag.Category == "Sim tam hoa")">Sim tam hoa</option>
+                </select>
+            </div>
+            <div class="flex-1">
+                <label class="block text-sm font-medium text-gray-700 mb-2">Sắp xếp</label>
+                <select name="sortBy" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
+                    <option value="EndTime" selected="@(ViewBag.SortBy == "EndTime")">Kết thúc sớm nhất</option>
+                    <option value="PriceAsc" selected="@(ViewBag.SortBy == "PriceAsc")">Giá thấp đến cao</option>
+                    <option value="PriceDesc" selected="@(ViewBag.SortBy == "PriceDesc")">Giá cao đến thấp</option>
+                    <option value="BeautyScore" selected="@(ViewBag.SortBy == "BeautyScore")">Độ đẹp cao nhất</option>
+                </select>
+            </div>
+            <div class="flex items-end">
+                <button type="submit" class="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors">
+                    Lọc
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Sim Grid -->
+    <div class="mb-8">
+        <div class="flex items-center justify-between mb-6">
+            <h2 class="text-2xl font-bold text-gray-900">Sim đang đấu giá</h2>
+            <span class="text-gray-600">@Model.Count sim</span>
+        </div>
+
+        @if (Model.Count == 0)
+        {
+            <div class="text-center py-12">
+                <i class="fas fa-mobile-alt text-6xl text-gray-300 mb-4"></i>
+                <h3 class="text-lg font-medium text-gray-900 mb-2">Không có sim nào</h3>
+                <p class="text-gray-600">Hiện tại không có sim nào phù hợp với bộ lọc của bạn.</p>
+            </div>
+        }
+        else
+        {
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                @foreach (var sim in Model)
+                {
+                    <div class="bg-white rounded-xl shadow-sm border border-gray-200 hover:shadow-lg transition-all duration-300 hover:scale-105">
+                        <a asp-controller="Home" asp-action="Details" asp-route-id="@sim.Id" class="block p-6">
+                            <!-- Header -->
+                            <div class="flex justify-between items-start mb-4">
+                                <div class="flex items-center space-x-2">
+                                    <i class="fas fa-mobile-alt text-blue-600"></i>
+                                    <h3 class="text-lg font-bold text-gray-900">@sim.Number</h3>
+                                </div>
+                                <div class="flex items-center space-x-2">
+                                    <span class="px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                                        @sim.Network
+                                    </span>
+                                    <span class="px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                                        Đang đấu
+                                    </span>
+                                </div>
+                            </div>
+
+                            <!-- Category & Beauty Score -->
+                            <div class="flex justify-between items-center mb-4">
+                                <span class="text-sm text-gray-600 font-medium">@sim.Category</span>
+                                <div class="flex items-center space-x-1">
+                                    @for (int i = 1; i <= 5; i++)
+                                    {
+                                        <i class="fas fa-star @(i <= sim.BeautyScore ? "text-yellow-400" : "text-gray-300")"></i>
+                                    }
+                                    <span class="text-sm text-gray-600 ml-1">(@sim.BeautyScore/5)</span>
+                                </div>
+                            </div>
+
+                            <!-- Price Section -->
+                            <div class="mb-4">
+                                <div class="flex justify-between items-center">
+                                    <div>
+                                        <p class="text-sm text-gray-600">Giá hiện tại</p>
+                                        <p class="text-xl font-bold text-green-600">
+                                            @sim.CurrentPrice.ToString("N0") VND
+                                        </p>
+                                    </div>
+                                    @if (sim.BuyNowPrice.HasValue)
+                                    {
+                                        <div class="text-right">
+                                            <p class="text-sm text-gray-600">Mua ngay</p>
+                                            <p class="text-lg font-semibold text-blue-600">
+                                                @sim.BuyNowPrice.Value.ToString("N0") VND
+                                            </p>
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+
+                            <!-- Stats -->
+                            <div class="flex justify-between items-center mb-4 text-sm text-gray-600">
+                                <div class="flex items-center space-x-1">
+                                    <i class="fas fa-chart-line"></i>
+                                    <span>@sim.TotalBids lượt đấu</span>
+                                </div>
+                                <div class="flex items-center space-x-1">
+                                    <i class="fas fa-clock"></i>
+                                    <span class="text-orange-600" id="countdown-@sim.Id" data-end-time="@sim.EndTime.ToString("yyyy-MM-ddTHH:mm:ss")">
+                                        Đang tính...
+                                    </span>
+                                </div>
+                            </div>
+
+                            <!-- Action Button -->
+                            <div class="pt-4 border-t border-gray-100">
+                                <button class="w-full py-2 px-4 rounded-lg font-medium transition-colors bg-blue-600 text-white hover:bg-blue-700">
+                                    Xem chi tiết & Đấu giá
+                                </button>
+                            </div>
+                        </a>
+                    </div>
+                }
+            </div>
+        }
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function updateCountdowns() {
+            document.querySelectorAll('[id^="countdown-"]').forEach(function(element) {
+                const endTime = new Date(element.getAttribute('data-end-time'));
+                const now = new Date();
+                const diff = endTime - now;
+
+                if (diff <= 0) {
+                    element.textContent = 'Đã kết thúc';
+                    element.className = 'text-red-600';
+                    return;
+                }
+
+                const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+                if (days > 0) {
+                    element.textContent = `${days}d ${hours}h ${minutes}m`;
+                } else if (hours > 0) {
+                    element.textContent = `${hours}h ${minutes}m ${seconds}s`;
+                } else {
+                    element.textContent = `${minutes}m ${seconds}s`;
+                }
+            });
+        }
+
+        updateCountdowns();
+        setInterval(updateCountdowns, 1000);
+    </script>
+}

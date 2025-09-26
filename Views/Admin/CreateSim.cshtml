@@ -1,0 +1,148 @@
+@model SimCard
+@{
+    ViewData["Title"] = "Thêm sim mới";
+}
+
+<div class="min-h-screen bg-gray-100">
+    <div class="bg-white shadow">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center py-6">
+                <div>
+                    <h1 class="text-3xl font-bold text-gray-900">Thêm sim mới</h1>
+                    <p class="text-gray-600">Tạo phiên đấu giá sim số đẹp</p>
+                </div>
+                <a asp-action="Sims" class="bg-gray-600 text-white px-4 py-2 rounded-lg hover:bg-gray-700">
+                    <i class="fas fa-arrow-left mr-2"></i>Quay lại
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div class="bg-white shadow rounded-lg">
+            <form method="post" class="p-6 space-y-6">
+                <div asp-validation-summary="ModelOnly" class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded"></div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <label asp-for="Number" class="block text-sm font-medium text-gray-700 mb-2">Số điện thoại</label>
+                        <input asp-for="Number" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" 
+                               placeholder="0987654321" required />
+                        <span asp-validation-for="Number" class="text-red-600 text-sm"></span>
+                    </div>
+
+                    <div>
+                        <label asp-for="Network" class="block text-sm font-medium text-gray-700 mb-2">Nhà mạng</label>
+                        <select asp-for="Network" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                            <option value="">Chọn nhà mạng</option>
+                            <option value="Viettel">Viettel</option>
+                            <option value="Vinaphone">Vinaphone</option>
+                            <option value="Mobifone">Mobifone</option>
+                            <option value="Vietnamobile">Vietnamobile</option>
+                            <option value="Itelecom">Itelecom</option>
+                        </select>
+                        <span asp-validation-for="Network" class="text-red-600 text-sm"></span>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <label asp-for="Category" class="block text-sm font-medium text-gray-700 mb-2">Danh mục</label>
+                        <select asp-for="Category" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                            <option value="">Chọn danh mục</option>
+                            <option value="Sim lộc phát">Sim lộc phát</option>
+                            <option value="Sim thần tài">Sim thần tài</option>
+                            <option value="Sim năm sinh">Sim năm sinh</option>
+                            <option value="Sim tam hoa">Sim tam hoa</option>
+                            <option value="Sim tứ quý">Sim tứ quý</option>
+                            <option value="Sim ngũ quý">Sim ngũ quý</option>
+                        </select>
+                        <span asp-validation-for="Category" class="text-red-600 text-sm"></span>
+                    </div>
+
+                    <div>
+                        <label asp-for="BeautyScore" class="block text-sm font-medium text-gray-700 mb-2">Độ đẹp (1-5 sao)</label>
+                        <select asp-for="BeautyScore" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                            <option value="">Chọn độ đẹp</option>
+                            <option value="1">1 sao</option>
+                            <option value="2">2 sao</option>
+                            <option value="3">3 sao</option>
+                            <option value="4">4 sao</option>
+                            <option value="5">5 sao</option>
+                        </select>
+                        <span asp-validation-for="BeautyScore" class="text-red-600 text-sm"></span>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div>
+                        <label asp-for="StartingPrice" class="block text-sm font-medium text-gray-700 mb-2">Giá khởi điểm (VND)</label>
+                        <input asp-for="StartingPrice" type="number" step="1000" min="100000" 
+                               class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" 
+                               placeholder="500000" required />
+                        <span asp-validation-for="StartingPrice" class="text-red-600 text-sm"></span>
+                    </div>
+
+                    <div>
+                        <label asp-for="BuyNowPrice" class="block text-sm font-medium text-gray-700 mb-2">Giá mua ngay (VND)</label>
+                        <input asp-for="BuyNowPrice" type="number" step="1000" min="100000" 
+                               class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" 
+                               placeholder="2000000" />
+                        <span asp-validation-for="BuyNowPrice" class="text-red-600 text-sm"></span>
+                        <p class="text-xs text-gray-500 mt-1">Để trống nếu không có giá mua ngay</p>
+                    </div>
+
+                    <div>
+                        <label asp-for="Status" class="block text-sm font-medium text-gray-700 mb-2">Trạng thái</label>
+                        <select asp-for="Status" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                            <option value="0">Nháp</option>
+                            <option value="1" selected>Đang đấu giá</option>
+                            <option value="2">Đã kết thúc</option>
+                            <option value="3">Đã bán</option>
+                        </select>
+                        <span asp-validation-for="Status" class="text-red-600 text-sm"></span>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <label asp-for="StartTime" class="block text-sm font-medium text-gray-700 mb-2">Thời gian bắt đầu</label>
+                        <input asp-for="StartTime" type="datetime-local" 
+                               class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" 
+                               value="@DateTime.Now.ToString("yyyy-MM-ddTHH:mm")" required />
+                        <span asp-validation-for="StartTime" class="text-red-600 text-sm"></span>
+                    </div>
+
+                    <div>
+                        <label asp-for="EndTime" class="block text-sm font-medium text-gray-700 mb-2">Thời gian kết thúc</label>
+                        <input asp-for="EndTime" type="datetime-local" 
+                               class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" 
+                               value="@DateTime.Now.AddDays(3).ToString("yyyy-MM-ddTHH:mm")" required />
+                        <span asp-validation-for="EndTime" class="text-red-600 text-sm"></span>
+                    </div>
+                </div>
+
+                <div>
+                    <label asp-for="Description" class="block text-sm font-medium text-gray-700 mb-2">Mô tả</label>
+                    <textarea asp-for="Description" rows="4" 
+                              class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" 
+                              placeholder="Mô tả về sim số đẹp này..."></textarea>
+                    <span asp-validation-for="Description" class="text-red-600 text-sm"></span>
+                </div>
+
+                <div class="flex justify-end space-x-3 pt-6 border-t border-gray-200">
+                    <a asp-action="Sims" class="px-6 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-md hover:bg-gray-200">
+                        Hủy
+                    </a>
+                    <button type="submit" class="px-6 py-2 text-sm font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700">
+                        <i class="fas fa-save mr-2"></i>Tạo sim
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
